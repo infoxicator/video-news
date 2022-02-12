@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-900 text-white;
+}
+
+main {
+  min-height: calc(100vh - 130px);
+}
+
+.btn-primary {
+  @apply bg-orange-400 text-white px-2 py-1 rounded;
+}
+
+.btn-secondary {
+  @apply bg-gray-50 text-gray-900 border px-2 py-1 rounded;
+}
