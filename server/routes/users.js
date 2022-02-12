@@ -11,7 +11,7 @@ router.get('/', async function(req, res, next) {
   includeNodeLocations: true,
   resources: "usable"
  }
- const dom = await JSDOM.fromURL("https://themoorlander.co.uk/moon-landing-in-exeter-cathedral/", jsdomOptions);
+ const dom = await JSDOM.fromURL("https://themoorlander.co.uk/the-great-train-robber-that-got-away-and-his-devon-link/");
 
  const document = dom.window.document;
 
@@ -19,11 +19,15 @@ router.get('/', async function(req, res, next) {
 
   const articleText = articleTag.textContent;
 
+  const articleTrimmed = articleText.substring(0, 6144);
+
   const articleImagesNodes = articleTag.querySelectorAll('img');
 
   const imagesArray = Array.from(articleImagesNodes);
 
-  const imagesUrls = imagesArray.map((img) => img.src);
+  console.log('image', imagesArray[1].itemValue);
+
+  const imagesUrls = imagesArray.map((img) => img.src).filter(img => img !== '');
 
   const finalResponse = {
     "images": imagesUrls,
