@@ -1,0 +1,12 @@
+{
+    "title": "Moon landing in Exeter Cathedral.",
+    "desc": "This is my description of the movie The Last of the Mohicans",
+    "date": "2022-2-1",
+    "images": [
+        "https://themoorlander.co.uk/wp-content/uploads/2022/02/Museum-of-the-Moon-by-Luke-Jerram-Photo-James-Billings.jpg",
+        "https://themoorlander.co.uk/wp-content/uploads/2022/02/Luke-Jerram-and-Museum-of-the-Moon.jpg",
+        "https://themoorlander.co.uk/wp-content/uploads/2022/02/Museum-of-the-Moon-by-Luke-Jerram-Photo-by-Robert-Sils.jpg"
+    ],
+    "aiSummary": "The Museum of the Moon is an art installation by Luke Jerram that is coming to Exeter Cathedral this month. It is a seven-meter model of the moon that uses precise lunar imagery from NASA. The installation is enhanced by a surround-sound composition created by BAFTA and Ivor Novello Award-winning composer, Dan Jones.",
+    "strings": ["Bristol-based artist, Luke Jerram, is known world-wide for his large-scale artworks...", "...capturing the public imagination with his ground-breaking combination of art,"]
+}
