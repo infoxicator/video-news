@@ -1,7 +1,6 @@
 import React, { useState } from "react"
-
-import { LockClosedIcon } from "@heroicons/react/solid"
 import LoadingSpinner from "../components/LoadingSpinner"
+import Logo from "../components/Logo"
 import { useSessions } from "../context/session-context"
 
 const options = ["12-18", "18-24", "24-30", "30+"]
@@ -36,7 +35,7 @@ export default function Example() {
       if (isValidHttpUrl(articleURL)) {
         console.log("valid url")
         console.log(articleURL)
-        fireAITask(articleURL)
+        fireAITask(articleURL, options[selected])
       }
     } catch (e) {
       console.log(e)
@@ -51,16 +50,16 @@ export default function Example() {
     <>
       <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl w-full space-y-8">
-          <div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900"></h2>
-            <p className="mt-2 text-center text-5xl	">
+          <div className="flex items-center space-x-1 text-indigo-400">
+            <Logo/>
+            <h2 className="mt-2 text-5xl	">
               <a
                 href="#"
                 className="hover:text-indigo-500 text-3xl font-bold text-indigo-400 decoration-indigo-400 underline underline-offset-4 decoration-wavy decoration-6"
               >
-                Articles
+                TL;DR Stories
               </a>
-            </p>
+            </h2>
           </div>
 
           <div className="shadow-sm space-y-4">
