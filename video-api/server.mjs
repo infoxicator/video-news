@@ -21,23 +21,27 @@ import express from 'express';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import cors from "cors";
+import cors from 'cors';
+import md5 from 'md5';
+import {randomUUID} from 'crypto';
 
 const app = express();
 const port = process.env.PORT || 8000;
 const compositionId = 'bigBadGroup';
 
 var whitelist = [
-	"http://localhost:8000",
-	"http://localhost:9000",
-  ];
-  
-  var corsOptions = {
+	'http://localhost:8000',
+	'http://localhost:9000',
+	'https://video-news-fe.onrender.com',
+	'http://video-news-fe.onrender.com',
+];
+
+var corsOptions = {
 	origin: function (origin, callback) {
-	  var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
-	  callback(null, originIsWhitelisted);
+		var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
+		callback(null, originIsWhitelisted);
 	},
-  };
+};
 
 const firebaseCERT = JSON.parse(process.env.FIREBASE_CERT);
 
@@ -47,9 +51,8 @@ initializeApp({
 });
 
 const bucket = getStorage().bucket();
-
+const uuid = 'newsTime';
 async function upload(storagePath, file) {
-	const uuid = 'testToken';
 	const data = await bucket.upload(file, {
 		destination: storagePath,
 		metadata: {
@@ -67,64 +70,74 @@ async function upload(storagePath, file) {
 		'?alt=media&token=' +
 		uuid
 	);
-	// const storage = getStorage()
-	// const storageRef = ref(storage, storagePath)
-	// await uploadBytes(storageRef, file)
-	// const url = await getDownloadURL(storageRef)
-	// return url
 }
 
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
 app.use(express.json());
 app.post('/', async (req, res) => {
 	try {
-		// if (cache.get(JSON.stringify(req.query))) {
-		// 	sendFile(cache.get(JSON.stringify(req.query)));
-		// 	return;
-		// }
-		const bundled = await bundle(path.join(process.cwd(), './src/index.jsx'));
-		const comps = await getCompositions(bundled);
-		const video = comps.find((c) => c.id === compositionId);
-		if (!video) {
-			throw new Error(`No video called ${compositionId}`);
-		}
-		res.set('content-type', 'video/mp4');
-
-		const tmpDir = await fs.promises.mkdtemp(
-			path.join(os.tmpdir(), 'remotion-')
-		);
-		const {assetsInfo} = await renderFrames({
-			config: video,
-			webpackBundle: bundled,
-			onStart: () => console.log('Rendering frames...'),
-			onFrameUpdate: (f) => {
-				if (f % 10 === 0) {
-					console.log(`Rendered frame ${f}`);
+		const fileID = md5(req.body.title);
+		const storageFile = bucket.file(`${fileID}.mp4`);
+		storageFile.exists().then(async (exists) => {
+			if (exists[0]) {	
+				const url =
+					'https://firebasestorage.googleapis.com/v0/b/' +
+					bucket.name +
+					'/o/' +
+					encodeURIComponent(storageFile.name) +
+					'?alt=media&token=' +
+					uuid;
+				res.send({url});
+				return;
+			} else {
+				const bundled = await bundle(
+					path.join(process.cwd(), './src/index.jsx')
+				);
+				const comps = await getCompositions(bundled);
+				const video = comps.find((c) => c.id === compositionId);
+				if (!video) {
+					throw new Error(`No video called ${compositionId}`);
 				}
-			},
-			parallelism: null,
-			outputDir: tmpDir,
-			inputProps: req.body,
-			compositionId,
-			imageFormat: 'jpeg',
-		});
+				res.set('content-type', 'video/mp4');
 
-		const finalOutput = path.join(tmpDir, 'out.mp4');
-		await stitchFramesToVideo({
-			dir: tmpDir,
-			force: true,
-			fps: video.fps,
-			height: video.height,
-			width: video.width,
-			outputLocation: finalOutput,
-			imageFormat: 'jpeg',
-			assetsInfo,
+				const tmpDir = await fs.promises.mkdtemp(
+					path.join(os.tmpdir(), 'remotion-')
+				);
+				const {assetsInfo} = await renderFrames({
+					config: video,
+					webpackBundle: bundled,
+					onStart: () => console.log('Rendering frames...'),
+					onFrameUpdate: (f) => {
+						if (f % 10 === 0) {
+							console.log(`Rendered frame ${f}`);
+						}
+					},
+					parallelism: null,
+					outputDir: tmpDir,
+					inputProps: req.body,
+					compositionId,
+					imageFormat: 'jpeg',
+				});
+
+				const finalOutput = path.join(tmpDir, 'out.mp4');
+				await stitchFramesToVideo({
+					dir: tmpDir,
+					force: true,
+					fps: video.fps,
+					height: video.height,
+					width: video.width,
+					outputLocation: finalOutput,
+					imageFormat: 'jpeg',
+					assetsInfo,
+				});
+				// cache.set(JSON.stringify(req.query), finalOutput);
+				const url = await upload(`${fileID}.mp4`, finalOutput);
+				console.log(url);
+				res.send({url});
+				console.log('Video rendered and sent!');
+				return
+			}
 		});
-		// cache.set(JSON.stringify(req.query), finalOutput);
-		const url = await upload('test/file.mp4', finalOutput);
-		console.log(url);
-		res.send({url});
-		console.log('Video rendered and sent!');
 	} catch (err) {
 		console.error(err);
 		res.json({
