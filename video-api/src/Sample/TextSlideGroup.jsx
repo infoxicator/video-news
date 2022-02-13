@@ -5,7 +5,7 @@ export const TextSlideGroup = ({strings = []}) => {
 	const frame = useCurrentFrame();
 	const videoConfig = useVideoConfig();
 
-	const framesPerSlide = videoConfig.durationInFrames / strings.length;
+	const framesPerSlide = Math.floor(videoConfig.durationInFrames / strings.length);
 
 	return (
 		<div style={{flex: 1, display: 'relative', zIndex: 3}}>

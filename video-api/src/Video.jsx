@@ -1,14 +1,15 @@
 import {Composition} from 'remotion';
 import {HelloWorld} from './HelloWorld';
 import {TextTest} from './Sample/TextTest';
-import { TextSlideGroup } from './Sample/TextSlideGroup';
+import {TextSlideGroup} from './Sample/TextSlideGroup';
 import {ImageTest} from './Sample/ImageTest';
 import {ImageSlideGroup} from './Sample/ImageSlideGroup';
 import {Logo} from './HelloWorld/Logo';
 import {Subtitle} from './HelloWorld/Subtitle';
-import response from "../response.json"
-import { BigBadGroup } from './Sample/TheRealGroup';
-import { textBreaker } from './Sample/textBreaker';
+import {LogoFrame} from './Sample/LogoFrame';
+import response from '../response.json';
+import {BigBadGroup} from './Sample/TheRealGroup';
+import {textBreaker} from './Sample/textBreaker';
 
 export const RemotionVideo = () => {
 	return (
@@ -16,17 +17,17 @@ export const RemotionVideo = () => {
 			<Composition
 				id="bigBadGroup"
 				component={BigBadGroup}
-				durationInFrames={450}
+				durationInFrames={700}
 				fps={30}
 				width={1080}
 				height={1920}
 				defaultProps={{
-					imgs: response.images,
-					strings: textBreaker(response.aiSummary),
-			
+					images: response.images,
+					aiSummary: response.aiSummary,
+					title: response.title
 				}}
 			/>
-		<Composition
+			<Composition
 				id="imageGroup"
 				component={ImageSlideGroup}
 				durationInFrames={150}
@@ -34,34 +35,20 @@ export const RemotionVideo = () => {
 				width={1080}
 				height={1920}
 				defaultProps={{
-					imgs: response.images
+					imgs: response.images,
 				}}
 			/>
-			{/* <Composition
-				id="textGroup"
-				component={TextSlideGroup}
-				durationInFrames={150}
+			
+			<Composition
+				id="logoFrame"
+				component={LogoFrame}
+				durationInFrames={90}
 				fps={30}
 				width={1080}
 				height={1920}
-				defaultProps={{
-					titleText: 'Welcome to Remotion',
-					titleColor: 'black',
-					strings: textBreaker(response.aiSummary),
-				}}
-			/> */}
-		{/* <Composition
-				id="ImageTest"
-				component={ImageTest}
-				durationInFrames={150}
-				fps={30}
-				width={1080}
-				height={1920}
-				defaultProps={{
-					titleText: 'Welcome to Remotion',
-					titleColor: 'black',
-				}}
 			/>
+			{/* 
+			
 			<Composition
 				id="HelloWorld"
 				component={HelloWorld}
@@ -74,6 +61,33 @@ export const RemotionVideo = () => {
 					titleColor: 'black',
 				}}
 			/>
+			
+			<Composition
+				id="textGroup"
+				component={TextSlideGroup}
+				durationInFrames={150}
+				fps={30}
+				width={1080}
+				height={1920}
+				defaultProps={{
+					titleText: 'Welcome to Remotion',
+					titleColor: 'black',
+					strings: textBreaker(response.aiSummary),
+				}}
+			/> */}
+			{/* <Composition
+				id="ImageTest"
+				component={ImageTest}
+				durationInFrames={150}
+				fps={30}
+				width={1080}
+				height={1920}
+				defaultProps={{
+					titleText: 'Welcome to Remotion',
+					titleColor: 'black',
+				}}
+			/>
+			
 			<Composition
 				id="Logo"
 				component={Logo}

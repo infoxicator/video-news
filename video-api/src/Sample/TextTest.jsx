@@ -14,14 +14,32 @@ export const TextTest = ({string = '', index, frames}) => {
 		fps: 30,
 	});
 
+	const slideOut = spring({
+		frame: frame-((frames/10)*9),
+		config: {
+			mass: 0.1,
+		},
+		from: 0,
+		to: 700,
+		fps: 30,
+	});
+
+
 	return (
+		<div style={{
+			transform:`translateY(${slideOut}px)`,
+			transformOrigin: "bottom center",
+			display: 'flex',
+			alignItems:'center'
+		}}>
 		<div
 			style={{
+				marginTop: 'auto',
 				padding: '3rem',
 				display: 'flex',
 				justifyContent: 'center',
 				alignItems: 'flex-end',
-				transform: index ? `translateX(${slideIn}px)` : '',
+				transform: `translateX(${slideIn}px)`,
 			}}
 		>
 			<div
@@ -42,11 +60,11 @@ export const TextTest = ({string = '', index, frames}) => {
 					<p
 						style={{
 							color: '#ffffff',
-							fontSize: '3rem',
+							fontSize: '3.5rem',
 							marginTop: 0,
 							marginBottom: 0,
-							marginRight:50,
-							marginLeft:50,
+							marginRight:60,
+							marginLeft:60,
 							fontFamily: 'verdana',
 						}}
 					>
@@ -54,6 +72,7 @@ export const TextTest = ({string = '', index, frames}) => {
 					</p>
 				</div>
 			</div>
+		</div>
 		</div>
 	);
 };

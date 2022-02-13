@@ -1,6 +1,7 @@
 import {spring, useCurrentFrame, useVideoConfig} from 'remotion';
 
 export const Title = ({titleText, titleColor}) => {
+	console.log({titleText});
 	const videoConfig = useVideoConfig();
 	const frame = useCurrentFrame();
 	const text = titleText.split(' ').map((t) => ` ${t} `);

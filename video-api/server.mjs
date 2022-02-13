@@ -4,6 +4,12 @@
  * If you don't want to render videos on a server, you can safely
  * delete this file.
  */
+import {initializeApp, cert} from 'firebase-admin/app';
+import {getStorage} from 'firebase-admin/storage';
+import dotenv from 'dotenv';
+dotenv.config({
+	path: `.env`,
+});
 
 import {bundle} from '@remotion/bundler';
 import {
@@ -18,23 +24,50 @@ import path from 'path';
 
 const app = express();
 const port = process.env.PORT || 8000;
-const compositionId = 'HelloWorld';
+const compositionId = 'bigBadGroup';
 
-const cache = new Map();
+const firebaseCERT = JSON.parse(process.env.FIREBASE_CERT);
 
-app.get('/', async (req, res) => {
-	const sendFile = (file) => {
-		fs.createReadStream(file)
-			.pipe(res)
-			.on('close', () => {
-				res.end();
-			});
-	};
+initializeApp({
+	credential: cert(firebaseCERT),
+	storageBucket: 'video-news-5bfc0.appspot.com',
+});
+
+const bucket = getStorage().bucket();
+
+async function upload(storagePath, file) {
+	const uuid = 'testToken';
+	const data = await bucket.upload(file, {
+		destination: storagePath,
+		metadata: {
+			metadata: {
+				firebaseStorageDownloadTokens: uuid,
+			},
+		},
+	});
+	let uploadedFile = data[0];
+	return (
+		'https://firebasestorage.googleapis.com/v0/b/' +
+		bucket.name +
+		'/o/' +
+		encodeURIComponent(uploadedFile.name) +
+		'?alt=media&token=' +
+		uuid
+	);
+	// const storage = getStorage()
+	// const storageRef = ref(storage, storagePath)
+	// await uploadBytes(storageRef, file)
+	// const url = await getDownloadURL(storageRef)
+	// return url
+}
+
+app.use(express.json());
+app.post('/', async (req, res) => {
 	try {
-		if (cache.get(JSON.stringify(req.query))) {
-			sendFile(cache.get(JSON.stringify(req.query)));
-			return;
-		}
+		// if (cache.get(JSON.stringify(req.query))) {
+		// 	sendFile(cache.get(JSON.stringify(req.query)));
+		// 	return;
+		// }
 		const bundled = await bundle(path.join(process.cwd(), './src/index.jsx'));
 		const comps = await getCompositions(bundled);
 		const video = comps.find((c) => c.id === compositionId);
@@ -57,7 +90,7 @@ app.get('/', async (req, res) => {
 			},
 			parallelism: null,
 			outputDir: tmpDir,
-			inputProps: req.query,
+			inputProps: req.body,
 			compositionId,
 			imageFormat: 'jpeg',
 		});
@@ -73,8 +106,10 @@ app.get('/', async (req, res) => {
 			imageFormat: 'jpeg',
 			assetsInfo,
 		});
-		cache.set(JSON.stringify(req.query), finalOutput);
-		sendFile(finalOutput);
+		// cache.set(JSON.stringify(req.query), finalOutput);
+		const url = await upload('test/file.mp4', finalOutput);
+		console.log(url);
+		res.send({url});
 		console.log('Video rendered and sent!');
 	} catch (err) {
 		console.error(err);
