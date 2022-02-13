@@ -13,26 +13,26 @@
     "clean": "gatsby clean",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1"
   },
-  "dependencies": { 
+  "dependencies": {
     "@heroicons/react": "^1.0.5",
     "@tailwindcss/forms": "^0.4.0",
     "@tailwindcss/typography": "^0.5.1",
     "framer-motion": "^6.2.4",
     "gatsby": "^4.7.1",
+    "node-fetch": "^2.6.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "node-fetch": "^2.6.7",
     "unique-names-generator": "^4.6.0",
     "uuid-int": "^3.1.0"
   },
   "devDependencies": {
-    "prettier": "^2.5.1",
     "autoprefixer": "^10.4.2",
     "gatsby-plugin-gatsby-cloud": "^4.7.0",
     "gatsby-plugin-manifest": "^4.7.0",
     "gatsby-plugin-postcss": "^5.7.0",
     "gatsby-plugin-react-helmet": "^5.7.0",
     "postcss": "^8.4.5",
+    "prettier": "^2.5.1",
     "tailwindcss": "^3.0.16"
   },
   "repository": {
