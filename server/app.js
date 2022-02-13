@@ -19,6 +19,8 @@ app.set('view engine', 'jade');
 var whitelist = [
   "http://localhost:8000",
   "http://localhost:9000",
+  "https://video-news-fe.onrender.com",
+  "https://video-news-fe.onrender.com"
 ];
 
 var corsOptions = {
