@@ -21,10 +21,23 @@ import express from 'express';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import cors from "cors";
 
 const app = express();
 const port = process.env.PORT || 8000;
 const compositionId = 'bigBadGroup';
+
+var whitelist = [
+	"http://localhost:8000",
+	"http://localhost:9000",
+  ];
+  
+  var corsOptions = {
+	origin: function (origin, callback) {
+	  var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
+	  callback(null, originIsWhitelisted);
+	},
+  };
 
 const firebaseCERT = JSON.parse(process.env.FIREBASE_CERT);
 
@@ -61,6 +74,7 @@ async function upload(storagePath, file) {
 	// return url
 }
 
+app.use(cors(corsOptions))
 app.use(express.json());
 app.post('/', async (req, res) => {
 	try {
