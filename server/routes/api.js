@@ -10,7 +10,8 @@ try {
 const articleUrl = req?.body?.articleUrl;
 
 const ageGroup = req?.body?.age;
-
+ 
+let maxTokens = req?.body?.maxTokens || 300;
 
 const jsdomOptions = {
   includeNodeLocations: true,
@@ -41,12 +42,12 @@ const jsdomOptions = {
   const imagesUrls = imagesArray.map((img) => img?.src).filter(img => img !== '');
 
   let prompt = articleTrimmed+'\n\nTl;dr';
-  let maxTokens = 300;
 
   if(ageGroup) {
     prompt = `Summarize this for a ${ageGroup} year old\n\n${articleTrimmed}`;
-    maxTokens = 120;
+    maxTokens = req?.body?.maxTokens || 120;
   }
+  try {
     const configuration = new Configuration({
         apiKey: process.env.OPENAI_API_KEY,
       });
@@ -68,8 +69,11 @@ const jsdomOptions = {
       "aiSummary": response.data.choices[0].text
     }
     res.send(finalResponse);
+  } catch (e) {
+    throw new Error(e?.response?.data?.error?.message);
+  }
 } catch (err) {
-    res.status(500).send({"text": "Something went wrong...", "err": err})
+    res.status(500).send({"error": `Something went wrong... \n ${err.name}`, "message": err.message})
 }
 
 });
