@@ -1,6 +1,6 @@
 import { navigate } from "gatsby"
 import React, { useCallback, useContext } from "react"
-
+const isBrowser = typeof window !== "undefined"
 const SessionContext = React.createContext()
 
 export const SessionProvider = ({ loginRequired, ...props }) => {
@@ -24,7 +24,7 @@ export const SessionProvider = ({ loginRequired, ...props }) => {
     })
     const data = await response.json()
     setDraftSubmission(data)
-    navigate("/draft")
+    isBrowser && navigate("/draft")
   }
 
   const fireVideoTask = async () => {
@@ -39,7 +39,7 @@ export const SessionProvider = ({ loginRequired, ...props }) => {
     })
     const data = await response.json()
     setFinalURL(data.url)
-    navigate("/review")
+    isBrowser && navigate("/review")
   }
 
   return (

@@ -4,6 +4,8 @@ import { useSessions } from "../context/session-context"
 import { XCircleIcon, VideoCameraIcon } from "@heroicons/react/solid"
 import { navigate } from "gatsby"
 
+const isBrowser = typeof window !== "undefined"
+
 export default function Example() {
   const [loading, setLoading] = useState()
   const { draftSubmission, setDraftSubmission, fireVideoTask } = useSessions()
@@ -16,7 +18,7 @@ export default function Example() {
     !draftSubmission?.title ||
     !draftSubmission?.aiSummary
   ) {
-    navigate("/")
+    isBrowser && navigate("/")
     return <div />
   }
 

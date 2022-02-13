@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import LoadingSpinner from "../components/LoadingSpinner"
 import { useSessions } from "../context/session-context"
 import { XCircleIcon, VideoCameraIcon } from "@heroicons/react/solid"
-import { navigate } from "gatsby"
 
 export default function Example() {
   const { draftSubmission, finalURL } = useSessions()
