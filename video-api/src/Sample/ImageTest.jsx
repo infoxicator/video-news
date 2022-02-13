@@ -36,7 +36,7 @@ export const ImageTest = ({
 		fps: 30,
 	});
 	const slideOut = spring({
-		frame: frame-((frames/10)*9),
+		frame: frame - (frames / 10) * 9,
 		config: {
 			mass: 0.1,
 		},
@@ -54,32 +54,34 @@ export const ImageTest = ({
 				transform: index ? `translateX(${slideIn}px)` : '',
 			}}
 		>
-			<div style={{
-				position: 'absolute',
-				fontFamily: 'SF Pro Text, Helvetica, Arial',
-				zIndex: 5,
-				top: 12,
-				fontSize: 80,
-				fontWeight: 600,
-				padding:10,
-				borderRadius:"50%",
-				left: 12,
-				width: 120,
-				height: 120,
-				color: "white",
-				backgroundColor: '#5716A2',
-				border: '10px solid #731DD8',
-				display: 'flex',
-				alignItems: 'center',
-				justifyContent: 'center',
-				transform:`translateY(${slideOut}px)`,
-			}}>
-				<p style={{margin:0}}>{index+1}</p>
-				</div>
+			<div
+				style={{
+					position: 'absolute',
+					fontFamily: 'SF Pro Text, Helvetica, Arial',
+					zIndex: 5,
+					top: 12,
+					fontSize: 80,
+					fontWeight: 600,
+					padding: 10,
+					borderRadius: '50%',
+					left: 12,
+					width: 120,
+					height: 120,
+					color: 'white',
+					backgroundColor: '#5716A2',
+					border: '10px solid #731DD8',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					transform: `translateY(${slideOut}px)`,
+				}}
+			>
+				<p style={{margin: 0}}>{index + 1}</p>
+			</div>
 			<Img
 				style={{
-					width: '100%',
-					height: '100%',
+					width: '1080px',
+					minHeight: '100%',
 					objectFit: 'cover',
 					opacity: 0.8,
 					transform: index ? `scale(${gradualScale})` : `scale(${scaleIn})`,
