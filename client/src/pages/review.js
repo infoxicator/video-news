@@ -1,7 +1,5 @@
-import React, { useState } from "react"
-import LoadingSpinner from "../components/LoadingSpinner"
+import React from "react"
 import { useSessions } from "../context/session-context"
-import { XCircleIcon, VideoCameraIcon } from "@heroicons/react/solid"
 
 export default function Example() {
   const { draftSubmission, finalURL } = useSessions()

@@ -12,7 +12,7 @@ export const SessionProvider = ({ loginRequired, ...props }) => {
     setDraftSubmission({})
   }, [setDraftSubmission])
 
-  const fireAITask = async url => {
+  const fireAITask = async (url, age) => {
     const response = await fetch("https://news-api.onrender.com/api", {
       method: "POST",
       headers: {
@@ -20,6 +20,7 @@ export const SessionProvider = ({ loginRequired, ...props }) => {
       },
       body: JSON.stringify({
         articleUrl: url,
+        age,
       }),
     })
     const data = await response.json()
