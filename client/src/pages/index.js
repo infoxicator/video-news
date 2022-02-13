@@ -1,6 +1,4 @@
 import React, { useState } from "react"
-
-import { LockClosedIcon } from "@heroicons/react/solid"
 import LoadingSpinner from "../components/LoadingSpinner"
 import { useSessions } from "../context/session-context"
 

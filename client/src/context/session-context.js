@@ -4,7 +4,9 @@ import React, { useCallback, useContext } from "react"
 const SessionContext = React.createContext()
 
 export const SessionProvider = ({ loginRequired, ...props }) => {
-  const [draftSubmission, setDraftSubmission] = React.useState({})
+  
+    const [draftSubmission, setDraftSubmission] = React.useState({})
+    const [finalURL, setFinalURL] = React.useState("")
 
   const resetDraft = useCallback(() => {
     setDraftSubmission({})
@@ -20,11 +22,24 @@ export const SessionProvider = ({ loginRequired, ...props }) => {
         articleUrl: url,
       }),
     })
-    console.log(response)
     const data = await response.json()
-    console.log(data)
     setDraftSubmission(data)
     navigate("/draft")
+  }
+
+  const fireVideoTask = async () => {
+    const response = await fetch("https://video-news.onrender.com", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...draftSubmission
+      }),
+    })
+    const data = await response.json()
+    setFinalURL(data.url)
+    navigate("/review")
   }
 
   return (
@@ -34,6 +49,8 @@ export const SessionProvider = ({ loginRequired, ...props }) => {
         setDraftSubmission,
         resetDraft,
         fireAITask,
+        fireVideoTask,
+        finalURL
       }}
       {...props}
     />
