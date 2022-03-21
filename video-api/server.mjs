@@ -4,7 +4,7 @@
  * If you don't want to render videos on a server, you can safely
  * delete this file.
  */
-import {initializeApp, cert} from 'firebase-admin/app';
+import {initializeApp, applicationDefault} from 'firebase-admin/app';
 import {getStorage} from 'firebase-admin/storage';
 import dotenv from 'dotenv';
 dotenv.config({
@@ -23,31 +23,29 @@ import os from 'os';
 import path from 'path';
 import cors from 'cors';
 import md5 from 'md5';
-import {randomUUID} from 'crypto';
+
 
 const app = express();
 const port = process.env.PORT || 8000;
 const compositionId = 'bigBadGroup';
 
-var whitelist = [
+const whitelist = [
 	'http://localhost:8000',
 	'http://localhost:9000',
 	'https://video-news-fe.onrender.com',
 	'http://video-news-fe.onrender.com',
 ];
 
-var corsOptions = {
-	origin: function (origin, callback) {
-		var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
+const corsOptions = {
+	origin (origin, callback) {
+		const originIsWhitelisted = whitelist.indexOf(origin) !== -1;
 		callback(null, originIsWhitelisted);
 	},
 };
 
-const firebaseCERT = JSON.parse(process.env.FIREBASE_CERT);
-
 initializeApp({
-	credential: cert(firebaseCERT),
-	storageBucket: 'video-news-5bfc0.appspot.com',
+	credential: applicationDefault(),
+	storageBucket: 'video-news-d652f.appspot.com',
 });
 
 const bucket = getStorage().bucket();
@@ -61,7 +59,7 @@ async function upload(storagePath, file) {
 			},
 		},
 	});
-	let uploadedFile = data[0];
+	const uploadedFile = data[0];
 	return (
 		'https://firebasestorage.googleapis.com/v0/b/' +
 		bucket.name +
